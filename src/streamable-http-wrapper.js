@@ -250,6 +250,16 @@ app.all('/mcp', async (req, res) => {
           };
           console.log('Notifications/initialized response:', JSON.stringify(response, null, 2));
           res.json(response);
+        } else if (method === 'ping') {
+          // Handle ping request from Smithery
+          console.log('Handling ping request');
+          const response = {
+            jsonrpc: '2.0',
+            id: req.body.id || 1,
+            result: { pong: true }
+          };
+          console.log('Ping response:', JSON.stringify(response, null, 2));
+          res.json(response);
         } else {
           // Fallback for direct tool calls (legacy format)
           console.log('Handling direct tool call');
