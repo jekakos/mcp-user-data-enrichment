@@ -154,6 +154,12 @@ For other users, links are generated automatically based on the name.
 
 MIT License - see LICENSE file for details
 
+## Deployment Files
+
+- `Dockerfile` - Docker configuration for containerized deployment
+- `smithery.yaml` - Smithery.ai configuration file
+- `.dockerignore` - Docker ignore file for optimized builds
+
 ## Related Links
 
 - [Model Context Protocol](https://modelcontextprotocol.io/)

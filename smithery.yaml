@@ -1,17 +1,12 @@
 name: mcp-user-data-enrichment
 description: MCP server for enriching user data with social network links
-version: 1.0.0
 
-# MCP Server Configuration
 mcp:
   servers:
     user-data-enrichment:
       command: node
       args: ["src/mcp-server.js"]
-      env: {}
-      description: Enriches user data by adding social media links
 
-# Tools provided by this MCP server
 tools:
   - name: enrich_user_data
     description: Enriches user data by adding social network links
@@ -28,51 +23,3 @@ tools:
           type: string
           description: Birth date in YYYY-MM-DD format
       required: [firstName, lastName, birthDate]
-
-# Examples for testing
-examples:
-  - name: Enrich John Smith
-    input:
-      firstName: John
-      lastName: Smith
-      birthDate: "1990-01-01"
-    expectedOutput:
-      user:
-        firstName: John
-        lastName: Smith
-        birthDate: "1990-01-01"
-      socialLinks:
-        instagram: "https://instagram.com/john_smith"
-        facebook: "https://facebook.com/john.smith"
-        twitter: "https://twitter.com/john_smith"
-
-  - name: Enrich New User
-    input:
-      firstName: Alice
-      lastName: Johnson
-      birthDate: "1992-08-15"
-    expectedOutput:
-      user:
-        firstName: Alice
-        lastName: Johnson
-        birthDate: "1992-08-15"
-      socialLinks:
-        instagram: "https://instagram.com/alice_johnson"
-        facebook: "https://facebook.com/alice_johnson"
-        twitter: "https://twitter.com/alice_johnson"
-        linkedin: "https://linkedin.com/in/alice_johnson"
-
-# Build configuration
-build:
-  dockerfile: Dockerfile
-
-# Metadata
-metadata:
-  author: jekakos
-  repository: https://github.com/jekakos/mcp-user-data-enrichment
-  license: MIT
-  tags:
-    - mcp
-    - user-data
-    - social-links
-    - enrichment
