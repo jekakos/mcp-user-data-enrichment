@@ -191,14 +191,56 @@ app.all('/mcp', async (req, res) => {
         break;
         
       case 'POST':
-        // Call tool - Streamable HTTP format
-        const { name, arguments: args } = req.body;
-        const result = await mcpManager.callTool(name, args);
-        res.json({
-          jsonrpc: '2.0',
-          id: 2,
-          result: result
-        });
+        // Handle different types of POST requests
+        const { method, params, name, arguments: args } = req.body;
+        
+        if (method === 'initialize') {
+          // Handle initialize request from Smithery
+          console.log('Handling initialize request');
+          res.json({
+            jsonrpc: '2.0',
+            id: req.body.id || 0,
+            result: {
+              protocolVersion: '2025-06-18',
+              capabilities: {
+                tools: {}
+              },
+              serverInfo: {
+                name: 'mcp-user-data-enrichment',
+                version: '1.0.0'
+              }
+            }
+          });
+        } else if (method === 'tools/list') {
+          // List tools
+          console.log('Handling tools/list request');
+          const tools = await mcpManager.listTools();
+          res.json({
+            jsonrpc: '2.0',
+            id: req.body.id || 1,
+            result: tools
+          });
+        } else if (method === 'tools/call') {
+          // Call tool
+          console.log('Handling tools/call request');
+          const toolName = params?.name || name;
+          const toolArgs = params?.arguments || args;
+          const result = await mcpManager.callTool(toolName, toolArgs);
+          res.json({
+            jsonrpc: '2.0',
+            id: req.body.id || 2,
+            result: result
+          });
+        } else {
+          // Fallback for direct tool calls (legacy format)
+          console.log('Handling direct tool call');
+          const result = await mcpManager.callTool(name, args);
+          res.json({
+            jsonrpc: '2.0',
+            id: req.body.id || 3,
+            result: result
+          });
+        }
         break;
         
       case 'DELETE':
@@ -218,6 +260,8 @@ app.all('/mcp', async (req, res) => {
     });
   }
 });
+
+
 
 // Health check endpoint
 app.get('/health', (req, res) => {
