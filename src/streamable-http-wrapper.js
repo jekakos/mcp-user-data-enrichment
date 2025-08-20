@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8081;
 
 // Middleware
 app.use(express.json());
@@ -166,9 +166,10 @@ function parseConfig(query) {
 // Streamable HTTP MCP endpoint for Smithery
 app.all('/mcp', async (req, res) => {
   try {
-    console.log(`Streamable HTTP MCP Request: ${req.method} /mcp`);
+    console.log(`=== Streamable HTTP MCP Request: ${req.method} /mcp ===`);
+    console.log('Headers:', req.headers);
     console.log('Query params:', req.query);
-    console.log('Body:', req.body);
+    console.log('Body:', JSON.stringify(req.body, null, 2));
     
     // Parse configuration from query parameters
     const config = parseConfig(req.query);
@@ -197,7 +198,7 @@ app.all('/mcp', async (req, res) => {
         if (method === 'initialize') {
           // Handle initialize request from Smithery
           console.log('Handling initialize request');
-          res.json({
+          const response = {
             jsonrpc: '2.0',
             id: req.body.id || 0,
             result: {
@@ -210,27 +211,35 @@ app.all('/mcp', async (req, res) => {
                 version: '1.0.0'
               }
             }
-          });
+          };
+          console.log('Initialize response:', JSON.stringify(response, null, 2));
+          res.json(response);
         } else if (method === 'tools/list') {
           // List tools
           console.log('Handling tools/list request');
           const tools = await mcpManager.listTools();
-          res.json({
+          const response = {
             jsonrpc: '2.0',
             id: req.body.id || 1,
             result: tools
-          });
+          };
+          console.log('Tools/list response:', JSON.stringify(response, null, 2));
+          res.json(response);
         } else if (method === 'tools/call') {
           // Call tool
           console.log('Handling tools/call request');
           const toolName = params?.name || name;
           const toolArgs = params?.arguments || args;
+          console.log('Tool name:', toolName);
+          console.log('Tool args:', JSON.stringify(toolArgs, null, 2));
           const result = await mcpManager.callTool(toolName, toolArgs);
-          res.json({
+          const response = {
             jsonrpc: '2.0',
             id: req.body.id || 2,
             result: result
-          });
+          };
+          console.log('Tools/call response:', JSON.stringify(response, null, 2));
+          res.json(response);
         } else {
           // Fallback for direct tool calls (legacy format)
           console.log('Handling direct tool call');
