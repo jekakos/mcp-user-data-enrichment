@@ -12,6 +12,18 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 
+// Add CORS headers for Smithery
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 // Class for managing MCP server (reused from http-wrapper.js)
 class MCPServerManager {
   constructor() {
@@ -165,17 +177,21 @@ app.all('/mcp', async (req, res) => {
     // Handle different HTTP methods
     switch (req.method) {
       case 'GET':
-        // List tools
+        // List tools - Streamable HTTP format
+        console.log('Handling GET /mcp - List tools');
         const tools = await mcpManager.listTools();
-        res.json({
+        console.log('Tools response:', JSON.stringify(tools, null, 2));
+        const response = {
           jsonrpc: '2.0',
           id: 1,
           result: tools
-        });
+        };
+        console.log('Final response:', JSON.stringify(response, null, 2));
+        res.json(response);
         break;
         
       case 'POST':
-        // Call tool
+        // Call tool - Streamable HTTP format
         const { name, arguments: args } = req.body;
         const result = await mcpManager.callTool(name, args);
         res.json({
