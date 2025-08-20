@@ -132,6 +132,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   throw new Error(`Unknown tool: ${name}`);
 });
 
+
+
 // Start server via stdio
 const transport = new StdioServerTransport();
 await server.connect(transport);

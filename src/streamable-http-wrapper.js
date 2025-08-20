@@ -202,7 +202,7 @@ app.all('/mcp', async (req, res) => {
             jsonrpc: '2.0',
             id: req.body.id || 0,
             result: {
-              protocolVersion: '2025-06-18',
+              protocolVersion: '2024-11-05',
               capabilities: {
                 tools: {
                   listChanged: true
