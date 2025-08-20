@@ -1,11 +1,18 @@
-name: mcp-user-data-enrichment
-description: MCP server for enriching user data with social network links
-
-mcp:
-  servers:
-    user-data-enrichment:
-      command: node
-      args: ["src/mcp-server.js"]
+runtime: "container"
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
+startCommand:
+  type: "http"
+  configSchema:
+    type: "object"
+    properties:
+      apiKey:
+        type: "string"
+        description: "Optional API key for authentication"
+    required: []
+  exampleConfig:
+    apiKey: "sk-example123"
 
 tools:
   - name: enrich_user_data
