@@ -240,6 +240,16 @@ app.all('/mcp', async (req, res) => {
           };
           console.log('Tools/call response:', JSON.stringify(response, null, 2));
           res.json(response);
+        } else if (method === 'notifications/initialized') {
+          // Handle notifications/initialized request from Smithery
+          console.log('Handling notifications/initialized request');
+          const response = {
+            jsonrpc: '2.0',
+            id: req.body.id || null,
+            result: null
+          };
+          console.log('Notifications/initialized response:', JSON.stringify(response, null, 2));
+          res.json(response);
         } else {
           // Fallback for direct tool calls (legacy format)
           console.log('Handling direct tool call');
