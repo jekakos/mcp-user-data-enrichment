@@ -51,7 +51,9 @@ const server = new Server(
   },
   {
     capabilities: {
-      tools: {},
+      tools: {
+        listChanged: true
+      },
     },
   }
 );

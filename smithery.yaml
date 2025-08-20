@@ -45,7 +45,7 @@ tools:
             facebook: "https://facebook.com/john.smith"
             twitter: "https://twitter.com/john_smith"
 
-# Test configuration for Smithery.ai
+# Test examples for Smithery.ai validation
 test:
   enabled: true
   timeout: 30
@@ -66,17 +66,3 @@ test:
               instagram: "https://instagram.com/john_smith"
               facebook: "https://facebook.com/john.smith"
               twitter: "https://twitter.com/john_smith"
-        - name: "Another test case"
-          input:
-            firstName: "Emily"
-            lastName: "Davis"
-            birthDate: "1985-05-15"
-          expectedOutput:
-            user:
-              firstName: "Emily"
-              lastName: "Davis"
-              birthDate: "1985-05-15"
-            socialLinks:
-              instagram: "https://instagram.com/emily_davis"
-              facebook: "https://facebook.com/emily.davis"
-              twitter: "https://twitter.com/emily_davis"

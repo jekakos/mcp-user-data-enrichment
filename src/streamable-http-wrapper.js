@@ -204,7 +204,9 @@ app.all('/mcp', async (req, res) => {
             result: {
               protocolVersion: '2025-06-18',
               capabilities: {
-                tools: {}
+                tools: {
+                  listChanged: true
+                }
               },
               serverInfo: {
                 name: 'mcp-user-data-enrichment',
