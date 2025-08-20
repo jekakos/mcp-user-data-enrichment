@@ -215,16 +215,8 @@ app.all('/mcp', async (req, res) => {
           console.log('Initialize response:', JSON.stringify(response, null, 2));
           res.json(response);
           
-          // Also send tools list after initialization
-          setTimeout(async () => {
-            try {
-              const tools = await mcpManager.listTools();
-              console.log('Auto-sending tools list after initialize');
-              console.log('Tools available:', JSON.stringify(tools, null, 2));
-            } catch (error) {
-              console.error('Error getting tools list:', error);
-            }
-          }, 100);
+          // Log that initialization is complete
+          console.log('Initialization complete - waiting for tools/list request from Smithery');
         } else if (method === 'tools/list') {
           // List tools
           console.log('Handling tools/list request');
@@ -243,14 +235,29 @@ app.all('/mcp', async (req, res) => {
           const toolArgs = params?.arguments || args;
           console.log('Tool name:', toolName);
           console.log('Tool args:', JSON.stringify(toolArgs, null, 2));
-          const result = await mcpManager.callTool(toolName, toolArgs);
-          const response = {
-            jsonrpc: '2.0',
-            id: req.body.id || 2,
-            result: result
-          };
-          console.log('Tools/call response:', JSON.stringify(response, null, 2));
-          res.json(response);
+          
+          try {
+            const result = await mcpManager.callTool(toolName, toolArgs);
+            const response = {
+              jsonrpc: '2.0',
+              id: req.body.id || 2,
+              result: result
+            };
+            console.log('Tools/call response:', JSON.stringify(response, null, 2));
+            res.json(response);
+          } catch (error) {
+            console.error('Error in tools/call:', error);
+            const errorResponse = {
+              jsonrpc: '2.0',
+              id: req.body.id || 2,
+              error: {
+                code: -32603,
+                message: error.message || 'Internal error'
+              }
+            };
+            console.log('Tools/call error response:', JSON.stringify(errorResponse, null, 2));
+            res.json(errorResponse);
+          }
         } else if (method === 'notifications/initialized') {
           // Handle notifications/initialized request from Smithery
           console.log('Handling notifications/initialized request');
