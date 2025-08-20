@@ -214,6 +214,17 @@ app.all('/mcp', async (req, res) => {
           };
           console.log('Initialize response:', JSON.stringify(response, null, 2));
           res.json(response);
+          
+          // Also send tools list after initialization
+          setTimeout(async () => {
+            try {
+              const tools = await mcpManager.listTools();
+              console.log('Auto-sending tools list after initialize');
+              console.log('Tools available:', JSON.stringify(tools, null, 2));
+            } catch (error) {
+              console.error('Error getting tools list:', error);
+            }
+          }, 100);
         } else if (method === 'tools/list') {
           // List tools
           console.log('Handling tools/list request');
