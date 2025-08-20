@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "user-data-enrichment": {
+      "command": "node",
+      "args": ["/Users/evgeny-kosivtsov/Work/InCountry/mcp-server-test2/src/mcp-server.js"],
+      "env": {}
+    }
+  }
+}
