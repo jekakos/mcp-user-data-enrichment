@@ -200,7 +200,7 @@ app.all('/mcp', async (req, res) => {
           console.log('Handling initialize request');
           const response = {
             jsonrpc: '2.0',
-            id: req.body.id || 0,
+            id: req.body.id, // Use exact ID from request
             result: {
               protocolVersion: '2024-11-05',
               capabilities: {
@@ -225,7 +225,7 @@ app.all('/mcp', async (req, res) => {
           const tools = await mcpManager.listTools();
           const response = {
             jsonrpc: '2.0',
-            id: req.body.id || 1,
+            id: req.body.id, // Use exact ID from request
             result: tools
           };
           console.log('Tools/list response:', JSON.stringify(response, null, 2));
@@ -242,7 +242,7 @@ app.all('/mcp', async (req, res) => {
             const result = await mcpManager.callTool(toolName, toolArgs);
             const response = {
               jsonrpc: '2.0',
-              id: req.body.id || 2,
+              id: req.body.id, // Use exact ID from request
               result: result
             };
             console.log('Tools/call response:', JSON.stringify(response, null, 2));
@@ -251,7 +251,7 @@ app.all('/mcp', async (req, res) => {
             console.error('Error in tools/call:', error);
             const errorResponse = {
               jsonrpc: '2.0',
-              id: req.body.id || 2,
+              id: req.body.id, // Use exact ID from request
               error: {
                 code: -32603,
                 message: error.message || 'Internal error'
@@ -265,7 +265,7 @@ app.all('/mcp', async (req, res) => {
           console.log('Handling notifications/initialized request');
           const response = {
             jsonrpc: '2.0',
-            id: req.body.id || null,
+            id: req.body.id, // Use exact ID from request (can be null for notifications)
             result: null
           };
           console.log('Notifications/initialized response:', JSON.stringify(response, null, 2));
@@ -275,7 +275,7 @@ app.all('/mcp', async (req, res) => {
           console.log('Handling ping request');
           const response = {
             jsonrpc: '2.0',
-            id: req.body.id || 1,
+            id: req.body.id, // Use exact ID from request
             result: { pong: true }
           };
           console.log('Ping response:', JSON.stringify(response, null, 2));
@@ -286,7 +286,7 @@ app.all('/mcp', async (req, res) => {
           const result = await mcpManager.callTool(name, args);
           res.json({
             jsonrpc: '2.0',
-            id: req.body.id || 3,
+            id: req.body.id, // Use exact ID from request
             result: result
           });
         }

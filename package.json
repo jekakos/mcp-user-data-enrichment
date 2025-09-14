@@ -10,7 +10,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "mcp": "node src/mcp-server.js"
+    "mcp": "node src/mcp-server.js",
+    "streamable": "node src/streamable-http-wrapper.js",
+    "streamable:dev": "node --watch src/streamable-http-wrapper.js"
   },
   "keywords": ["mcp", "model-context-protocol", "server", "user-data", "social-links"],
   "author": "Your Name",
