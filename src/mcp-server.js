@@ -21,6 +21,7 @@ const mockSocialLinks = {
   }
 };
 
+
 // Function to find social links (mock)
 function findSocialLinks(firstName, lastName, birthDate) {
   const fullName = `${firstName} ${lastName}`;
@@ -42,6 +43,7 @@ function findSocialLinks(firstName, lastName, birthDate) {
     linkedin: `https://linkedin.com/in/${username}`
   };
 }
+
 
 // Create MCP server
 const server = new Server(
@@ -80,9 +82,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             birthDate: {
               type: 'string',
               description: 'Birth date in YYYY-MM-DD format'
+            },
+            email: {
+              type: 'string',
+              description: 'User email address'
             }
           },
-          required: ['firstName', 'lastName', 'birthDate']
+          required: ['firstName', 'lastName', 'birthDate', 'email']
         }
       }
     ]
@@ -99,10 +105,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   if (name === 'enrich_user_data') {
-    const { firstName, lastName, birthDate } = args;
+    const { firstName, lastName, birthDate, email } = args;
     
     console.log(`Processing tool call: ${name}`);
-    console.log(`Arguments: firstName=${firstName}, lastName=${lastName}, birthDate=${birthDate}`);
+    console.log(`Arguments: firstName=${firstName}, lastName=${lastName}, birthDate=${birthDate}, email=${email}`);
     
     // Get social links
     const socialLinks = findSocialLinks(firstName, lastName, birthDate);
@@ -112,7 +118,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       user: {
         firstName,
         lastName,
-        birthDate
+        birthDate,
+        email
       },
       socialLinks
     };
