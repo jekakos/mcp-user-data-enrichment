@@ -75,8 +75,8 @@ export async function handleMCPRequest(req, res) {
           handleNotificationsInitialized(req);
           res.status(200).end();
         } else if (method === 'ping') {
-          handlePing(req);
-          res.status(200).end();
+          const result = handlePing(req);
+          res.json(result);
         } else {
           // Fallback for direct tool calls (legacy format)
           console.log('Handling direct tool call');

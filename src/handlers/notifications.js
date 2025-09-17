@@ -7,7 +7,13 @@ export function handleNotificationsInitialized(req) {
 }
 
 export function handlePing(req) {
-  console.log('Handling ping notification');
-  // Ping is a notification, no response needed
-  return null; // Will be handled as notification
+  console.log('Handling ping request');
+  // Ping should return a JSON response, not a notification
+  return {
+    jsonrpc: '2.0',
+    id: req.body.id,
+    result: {
+      pong: true
+    }
+  };
 }

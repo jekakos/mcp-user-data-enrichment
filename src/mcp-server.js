@@ -250,9 +250,21 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
         mimeType: 'application/json'
       },
       {
-        uri: 'users-bio://{userId}',
-        name: 'User Extended Bio',
-        description: 'Extended user data with social links in JSON format wrapped in text. Use userId parameter (e.g., user_1, user_2, user_3)',
+        uri: 'users-bio://user_1',
+        name: 'John Smith Bio',
+        description: 'Extended user data for John Smith with social links in JSON format wrapped in text',
+        mimeType: 'text/plain'
+      },
+      {
+        uri: 'users-bio://user_2',
+        name: 'Sarah Johnson Bio',
+        description: 'Extended user data for Sarah Johnson with social links in JSON format wrapped in text',
+        mimeType: 'text/plain'
+      },
+      {
+        uri: 'users-bio://user_3',
+        name: 'Michael Brown Bio',
+        description: 'Extended user data for Michael Brown with social links in JSON format wrapped in text',
         mimeType: 'text/plain'
       }
     ]
@@ -272,8 +284,8 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   
   if (uri === 'users://list') {
     content = JSON.stringify(mockResources.users, null, 2);
-  } else if (uri.startsWith('users-bio://')) {
-    // Dynamic path: users-bio://{userId}
+  } else if (uri === 'users-bio://user_1' || uri === 'users-bio://user_2' || uri === 'users-bio://user_3') {
+    // Specific user bio resources
     mimeType = 'text/plain';
     const userId = uri.replace('users-bio://', '');
     const user = mockResources.users.find(u => u.id === userId);
