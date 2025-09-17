@@ -129,6 +129,14 @@ class MCPServerManager {
   async callTool(name, arguments_) {
     return this.sendRequest('tools/call', { name, arguments: arguments_ });
   }
+
+  async listResources() {
+    return this.sendRequest('resources/list');
+  }
+
+  async readResource(uri) {
+    return this.sendRequest('resources/read', { uri });
+  }
 }
 
 // Create MCP server manager instance
@@ -183,6 +191,54 @@ app.post('/tools/call', async (req, res) => {
     });
   } catch (error) {
     console.error('[X] HTTP Response: POST /tools/call - Error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Get list of available resources
+app.get('/resources', async (req, res) => {
+  console.log('<===== HTTP Request: GET /resources');
+  try {
+    const resources = await mcpManager.listResources();
+    console.log('=====> HTTP Response: GET /resources - Success');
+    res.json({
+      success: true,
+      data: resources
+    });
+  } catch (error) {
+    console.error('[X] HTTP Response: GET /resources - Error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Read specific resource
+app.get('/resources/read', async (req, res) => {
+  console.log('<===== HTTP Request: GET /resources/read');
+  try {
+    const { uri } = req.query;
+    
+    if (!uri) {
+      console.log('[X] HTTP Response: GET /resources/read - Bad Request (missing uri)');
+      return res.status(400).json({
+        success: false,
+        error: 'URI parameter is required'
+      });
+    }
+
+    const resource = await mcpManager.readResource(uri);
+    console.log('=====> HTTP Response: GET /resources/read - Success');
+    res.json({
+      success: true,
+      data: resource
+    });
+  } catch (error) {
+    console.error('[X] HTTP Response: GET /resources/read - Error:', error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -260,6 +316,8 @@ app.listen(PORT, () => {
   console.log(`   GET  /status - server status`);
   console.log(`   GET  /tools - list of tools`);
   console.log(`   POST /tools/call - call tool`);
+  console.log(`   GET  /resources - list of resources`);
+  console.log(`   GET  /resources/read?uri=<uri> - read specific resource`);
   console.log(`   POST /enrich-user - enrich user data`);
 });
 

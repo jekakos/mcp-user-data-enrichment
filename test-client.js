@@ -65,13 +65,58 @@ async function testServer() {
         arguments: {
           firstName: 'David',
           lastName: 'Wilson',
-          birthDate: '1995-12-25'
+          birthDate: '1995-12-25',
+          email: 'david.wilson@example.com'
         }
       })
     });
     
     const callResult = await callResponse.json();
     console.log('Result:', JSON.stringify(callResult.data, null, 2));
+    console.log('');
+
+    // 6. Test resources list
+    console.log('6. Testing resources list...');
+    const resourcesResponse = await fetch(`${BASE_URL}/resources`);
+    const resources = await resourcesResponse.json();
+    console.log('Resources:', JSON.stringify(resources.data, null, 2));
+    console.log('');
+
+    // 7. Test reading specific resources
+    console.log('7. Testing resource reading...');
+    
+    // Test users list
+    console.log('7a. Reading users list...');
+    const usersResponse = await fetch(`${BASE_URL}/resources/read?uri=users://list`);
+    const users = await usersResponse.json();
+    console.log('Users:', JSON.stringify(users.data, null, 2));
+    console.log('');
+
+    // Test extended user bio (JSON wrapped in text) - Dynamic path
+    console.log('7b. Reading John Smith extended bio (dynamic path)...');
+    const bioResponse1 = await fetch(`${BASE_URL}/resources/read?uri=users-bio://user_1`);
+    const bio1 = await bioResponse1.json();
+    console.log('Extended Bio for user_1 (text with JSON):');
+    console.log(bio1.data.contents[0].text);
+    console.log('');
+
+    // Test another user with dynamic path
+    console.log('7c. Reading Sarah Johnson extended bio (dynamic path)...');
+    const bioResponse2 = await fetch(`${BASE_URL}/resources/read?uri=users-bio://user_2`);
+    const bio2 = await bioResponse2.json();
+    console.log('Extended Bio for user_2 (text with JSON):');
+    console.log(bio2.data.contents[0].text);
+    console.log('');
+
+    // Test non-existent user (should show error)
+    console.log('7d. Testing non-existent user (should show error)...');
+    try {
+      const bioResponse3 = await fetch(`${BASE_URL}/resources/read?uri=users-bio://user_999`);
+      const bio3 = await bioResponse3.json();
+      console.log('Response:', JSON.stringify(bio3, null, 2));
+    } catch (error) {
+      console.log('Expected error for non-existent user:', error.message);
+    }
     console.log('');
 
     console.log('All tests passed successfully!');
