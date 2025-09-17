@@ -1,68 +1,18 @@
-runtime: "container"
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+runtime: container
 build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
+  dockerfile: Dockerfile
+  dockerBuildPath: .
 startCommand:
-  type: "http"
+  type: http
   configSchema:
-    type: "object"
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required: []
     properties:
       apiKey:
-        type: "string"
-        description: "Optional API key for authentication"
-    required: []
+        type: string
+        description: Optional API key for authentication
   exampleConfig:
-    apiKey: "sk-example123"
-
-tools:
-  - name: enrich_user_data
-    description: Enriches user data by adding social network links
-    inputSchema:
-      type: object
-      properties:
-        firstName:
-          type: string
-          description: User first name
-        lastName:
-          type: string
-          description: User last name
-        birthDate:
-          type: string
-          description: Birth date in YYYY-MM-DD format
-      required: [firstName, lastName, birthDate]
-    examples:
-      - input:
-          firstName: "John"
-          lastName: "Smith"
-          birthDate: "1990-01-01"
-        output:
-          user:
-            firstName: "John"
-            lastName: "Smith"
-            birthDate: "1990-01-01"
-          socialLinks:
-            instagram: "https://instagram.com/john_smith"
-            facebook: "https://facebook.com/john.smith"
-            twitter: "https://twitter.com/john_smith"
-
-# Test examples for Smithery.ai validation
-test:
-  enabled: true
-  timeout: 30
-  tools:
-    - name: enrich_user_data
-      testCases:
-        - name: "Basic user enrichment"
-          input:
-            firstName: "John"
-            lastName: "Smith"
-            birthDate: "1990-01-01"
-          expectedOutput:
-            user:
-              firstName: "John"
-              lastName: "Smith"
-              birthDate: "1990-01-01"
-            socialLinks:
-              instagram: "https://instagram.com/john_smith"
-              facebook: "https://facebook.com/john.smith"
-              twitter: "https://twitter.com/john_smith"
+    apiKey: sk-example123
