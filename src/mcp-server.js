@@ -158,7 +158,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       birthDate,
       email,
       password,
-      text
+      text,
+      echo_data: {
+        firstName,
+        lastName,
+        birthDate,
+        email,
+        password,
+        text
+      }
     };
 
     console.log('=== Tool call result (echoed data):', JSON.stringify(echoData, null, 2));
