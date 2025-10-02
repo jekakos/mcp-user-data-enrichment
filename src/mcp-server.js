@@ -7,24 +7,6 @@ import {
   ReadResourceRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 
-// Mock data for social networks
-const mockSocialLinks = {
-  "John Smith": {
-    instagram: "https://instagram.com/john_smith",
-    facebook: "https://facebook.com/john.smith",
-    twitter: "https://twitter.com/john_smith"
-  },
-  "Sarah Johnson": {
-    instagram: "https://instagram.com/sarah_johnson",
-    facebook: "https://facebook.com/sarah.johnson",
-    twitter: "https://twitter.com/sarah_johnson"
-  },
-  "Michael Brown": {
-    instagram: "https://instagram.com/michael_brown",
-    facebook: "https://facebook.com/michael.brown",
-    twitter: "https://twitter.com/michael_brown"
-  }
-};
 
 // Mock data for resources
 const mockResources = {
@@ -89,55 +71,7 @@ const mockResources = {
 };
 
 
-// Function to find social links (mock)
-function findSocialLinks(firstName, lastName, birthDate) {
-  const fullName = `${firstName} ${lastName}`;
-  
-  // Simulate Google search
-  console.log(`Searching social networks for: ${fullName} (${birthDate})`);
-  
-  // Return mock data or generate new ones
-  if (mockSocialLinks[fullName]) {
-    return mockSocialLinks[fullName];
-  }
-  
-  // Generate mock links for new users
-  const username = `${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
-  return {
-    instagram: `https://instagram.com/${username}`,
-    facebook: `https://facebook.com/${username}`,
-    twitter: `https://twitter.com/${username}`,
-    linkedin: `https://linkedin.com/in/${username}`
-  };
-}
 
-// Helper functions for generating user data
-function generateBio(user) {
-  const bios = {
-    'user_1': "John Smith is a software engineer with 10+ years of experience in web development. He's passionate about technology and enjoys sharing his knowledge on social media platforms.",
-    'user_2': "Sarah Johnson is a marketing specialist with expertise in digital campaigns and social media strategy. She loves connecting with people and building communities online.",
-    'user_3': "Michael Brown is a data scientist who works with machine learning and AI. He's interested in the intersection of technology and social impact."
-  };
-  return bios[user.id] || `${user.firstName} ${user.lastName} is a professional with diverse interests and active on social media.`;
-}
-
-function generateInterests(user) {
-  const interests = {
-    'user_1': ["Technology", "Web Development", "Open Source", "Photography"],
-    'user_2': ["Marketing", "Social Media", "Community Building", "Travel"],
-    'user_3': ["Data Science", "Machine Learning", "AI", "Research"]
-  };
-  return interests[user.id] || ["Technology", "Professional Development", "Networking"];
-}
-
-function generateLocation(user) {
-  const locations = {
-    'user_1': "San Francisco, CA",
-    'user_2': "New York, NY", 
-    'user_3': "Seattle, WA"
-  };
-  return locations[user.id] || "Location not specified";
-}
 
 
 // Create MCP server
@@ -165,8 +99,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   const tools = {
     tools: [
       {
-        name: 'enrich_user_data',
-        description: 'Enriches user data by adding social network links',
+        name: 'echo_data',
+        description: 'Echo data tool for proxy testing - returns the same data that was sent in parameters',
         inputSchema: {
           type: 'object',
           properties: {
@@ -185,9 +119,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             email: {
               type: 'string',
               description: 'User email address'
+            },
+            password: {
+              type: 'string',
+              description: 'User password'
+            },
+            text: {
+              type: 'string',
+              description: 'Additional text data'
             }
           },
-          required: ['firstName', 'lastName', 'birthDate', 'email']
+          required: ['firstName', 'lastName', 'birthDate', 'email', 'password', 'text']
         }
       }
     ]
@@ -203,33 +145,29 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   
   const { name, arguments: args } = request.params;
 
-  if (name === 'enrich_user_data') {
-    const { firstName, lastName, birthDate, email } = args;
+  if (name === 'echo_data') {
+    const { firstName, lastName, birthDate, email, password, text } = args;
     
     console.log(`Processing tool call: ${name}`);
-    console.log(`Arguments: firstName=${firstName}, lastName=${lastName}, birthDate=${birthDate}, email=${email}`);
+    console.log(`Arguments: firstName=${firstName}, lastName=${lastName}, birthDate=${birthDate}, email=${email}, password=${password}, text=${text}`);
     
-    // Get social links
-    const socialLinks = findSocialLinks(firstName, lastName, birthDate);
-    
-    // Form enriched data
-    const enrichedData = {
-      user: {
-        firstName,
-        lastName,
-        birthDate,
-        email
-      },
-      socialLinks
+    // Echo back the same data that was received
+    const echoData = {
+      firstName,
+      lastName,
+      birthDate,
+      email,
+      password,
+      text
     };
 
-    console.log('=== Tool call result:', JSON.stringify(enrichedData, null, 2));
+    console.log('=== Tool call result (echoed data):', JSON.stringify(echoData, null, 2));
 
     return {
       content: [
         {
           type: 'text',
-          text: JSON.stringify(enrichedData, null, 2)
+          text: JSON.stringify(echoData, null, 2)
         }
       ]
     };
